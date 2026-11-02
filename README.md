@@ -86,3 +86,25 @@ Run the offline List checks with `npm run test:lists`.
 Register the built server with `codex mcp add amazon -- /absolute/path/to/node /absolute/path/to/mcp-server-amazon/build/index.js`, then restart the MCP server in the desktop app. The server starts and advertises its tools without `amazonCookies.json`; authenticated Amazon operations still need an Amazon browser session. Standard Login with Amazon OAuth profile scopes do not grant access to shopping Lists or the cart.
 
 Verify cookie-free startup with `npm run build && node --test tests/startup.test.mjs`.
+
+### Amazon Local plugin (desktop)
+
+Package and install this version as a local plugin:
+
+```sh
+npm run package:plugin
+codex plugin marketplace add "$PWD/dist/amazon-marketplace"
+codex plugin add amazon-local@amazon-local-marketplace
+```
+
+Start a new local Work chat and select **Amazon Local** from Plugins. This is a desktop-only local plugin, not a published web plugin. Node.js and the Puppeteer browser must be installed on the machine. The generated package records this machine's Node executable and cookie-file path; rebuild it on another machine.
+
+The package contains the built server and installed dependencies, with no cookies or captured Amazon pages. It reads `amazonCookies.json` from the original checkout through `AMAZON_COOKIES_FILE`; the environment variable also works for standalone installations. Account operations still require authentication. Keep `dist/amazon-marketplace` for marketplace refreshes. After changing server code, rebuild the package and rerun `codex plugin add amazon-local@amazon-local-marketplace` to refresh the installed copy.
+
+If migrating from the standalone registration, remove it after verifying the plugin with `codex mcp remove amazon` to avoid duplicate tools. Run `npm run test:plugin` to check the package contents and its MCP handshake.
+
+### Sign in to Amazon
+
+Run `npm run login` from this checkout. A dedicated browser opens Amazon.com; enter your credentials and any verification directly there. The helper waits up to 10 minutes, saves only Amazon cookies to `amazonCookies.json` with owner-only permissions, then closes the browser. The cookies and temporary login file are ignored by Git and excluded from the plugin package. The running plugin loads the saved session on its next request; no restart is needed after login. Ask it to list your Lists.
+
+Run `node --experimental-test-module-mocks --test tests/login.test.mjs` to verify session-file filtering and permissions without using real credentials.

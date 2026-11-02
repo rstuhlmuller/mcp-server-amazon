@@ -1,6 +1,6 @@
 import fs from 'fs'
 import puppeteer from 'puppeteer'
-import { COOKIES_FILE_PATH, AMAZON_COOKIES, IS_BROWSER_VISIBLE } from './config.js'
+import { COOKIES_FILE_PATH, IS_BROWSER_VISIBLE } from './config.js'
 
 /** Get the current timestamp like "2024-06-06_15-30-45" */
 export function getTimestamp() {
@@ -11,7 +11,7 @@ export function getTimestamp() {
   )}`
 }
 
-export function loadAmazonCookiesFile() {
+export function loadAmazonCookiesFile(): puppeteer.CookieData[] {
   if (fs.existsSync(COOKIES_FILE_PATH)) {
     try {
       const json = JSON.parse(fs.readFileSync(COOKIES_FILE_PATH, 'utf-8'))
@@ -30,7 +30,12 @@ export function loadAmazonCookiesFile() {
   }
 }
 
-export async function createBrowserAndPage(): Promise<{ browser: puppeteer.Browser; page: puppeteer.Page }> {
+export async function createBrowserAndPage(requireLogin = false): Promise<{ browser: puppeteer.Browser; page: puppeteer.Page }> {
+  const cookies = loadAmazonCookiesFile()
+  if (requireLogin && cookies.length === 0) {
+    throw new Error(`Amazon login required. Export your Amazon session cookies to ${COOKIES_FILE_PATH}, then retry. No account request was made.`)
+  }
+
   // Launch Puppeteer
   const browser = await puppeteer.launch({
     headless: !IS_BROWSER_VISIBLE,
@@ -41,8 +46,8 @@ export async function createBrowserAndPage(): Promise<{ browser: puppeteer.Brows
   })
 
   // Set cookies if available
-  if (AMAZON_COOKIES?.length > 0) {
-    await browser.setCookie(...AMAZON_COOKIES)
+  if (cookies?.length > 0) {
+    await browser.setCookie(...cookies)
     console.error('[INFO] Set Amazon cookies in the browser')
   } else {
     console.error('[WARN] No Amazon cookies found, proceeding without them')

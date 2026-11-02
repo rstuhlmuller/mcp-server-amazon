@@ -42,7 +42,7 @@ export async function getCartContent(): Promise<CartContent> {
     const url = `https://www.${domain}/-/en/gp/cart/view.html?ref_=nav_cart`
     console.error(`[INFO][get-cart-content] Fetching cart content from ${url}`)
 
-    const { browser, page } = await createBrowserAndPage()
+    const { browser, page } = await createBrowserAndPage(true)
 
     try {
       // Navigate to the cart page
@@ -155,7 +155,7 @@ export async function addToCart(asin: string): Promise<{ success: boolean; messa
   const url = `https://www.${domain}/-/en/gp/product/${asin}`
   console.error(`[INFO][add-to-cart] Adding product ${asin} to cart from ${url}`)
 
-  const { browser, page } = await createBrowserAndPage()
+  const { browser, page } = await createBrowserAndPage(true)
 
   try {
     // Navigate to the product page
@@ -234,7 +234,7 @@ export async function clearCart() {
   const url = `https://www.${domain}/-/en/gp/cart/view.html`
   console.error(`[INFO][clear-cart] Clearing cart at ${url}`)
 
-  const { browser, page } = await createBrowserAndPage()
+  const { browser, page } = await createBrowserAndPage(true)
 
   try {
     // Navigate to the cart page
@@ -316,7 +316,7 @@ export async function removeFromCart(asin: string): Promise<{ success: boolean; 
   const url = `https://www.${domain}/-/en/gp/cart/view.html`
   console.error(`[INFO][remove-from-cart] Removing product ${asin} from cart at ${url}`)
 
-  const { browser, page } = await createBrowserAndPage()
+  const { browser, page } = await createBrowserAndPage(true)
 
   try {
     // Navigate to the cart page

@@ -74,7 +74,7 @@ async function readItems(page: Page, listId: string) {
 
 export async function listLists() {
   if (USE_MOCKS) return extractLists(fs.readFileSync(new URL('../mocks/listLists.html', import.meta.url), 'utf8'))
-  const { browser, page } = await createBrowserAndPage()
+  const { browser, page } = await createBrowserAndPage(true)
   try {
     await page.goto(`https://www.${getAmazonDomain()}/hz/wishlist/ls?requiresSignIn=1`, { waitUntil: 'networkidle2', timeout: 30000 })
     await throwIfNotLoggedIn(page)
@@ -88,7 +88,7 @@ export async function listLists() {
 export async function listItems(listId: string) {
   listIdSchema.parse(listId)
   if (USE_MOCKS) return { listId, items: extractItems(fs.readFileSync(new URL('../mocks/listItems.html', import.meta.url), 'utf8')), complete: true }
-  const { browser, page } = await createBrowserAndPage()
+  const { browser, page } = await createBrowserAndPage(true)
   try {
     return await readItems(page, listId)
   } finally {
@@ -100,7 +100,7 @@ export async function addToList(listId: string, asin: string) {
   listIdSchema.parse(listId)
   listAsinSchema.parse(asin)
   if (USE_MOCKS) throw new Error('Adding to a List is disabled in mock mode.')
-  const { browser, page } = await createBrowserAndPage()
+  const { browser, page } = await createBrowserAndPage(true)
   try {
     await page.goto(`https://www.${getAmazonDomain()}/-/en/gp/product/${asin}`, { waitUntil: 'networkidle2', timeout: 30000 })
     await throwIfNotLoggedIn(page)

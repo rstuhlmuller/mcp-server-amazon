@@ -8,7 +8,11 @@
   "scripts": {
     "build": "tsc && chmod -R 755 ./build",
     "clean": "rm mocks/*_202*",
-    "test:lists": "npm run build && node --experimental-test-module-mocks --test tests/lists.test.mjs"
+    "test:lists": "npm run build && node --experimental-test-module-mocks --test tests/lists.test.mjs",
+    "package:plugin": "npm run build && node scripts/package-plugin.mjs",
+    "test:plugin": "npm run package:plugin && node --test tests/plugin.test.mjs",
+    "test:auth": "npm run build && node --experimental-test-module-mocks --test tests/auth.test.mjs tests/session-refresh.test.mjs",
+    "login": "node scripts/login.mjs"
   },
   "files": [
     "build"
