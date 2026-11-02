@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "amazon-local",
+  "version": "1.0.1",
+  "description": "Search Amazon products and manage your Lists and cart through a local browser session.",
+  "extensions": {
+    "com.openai": {
+      "requires_local_executor": true,
+      "interface": {
+        "displayName": "Amazon Local",
+        "shortDescription": "Amazon products, Lists, cart, and order history",
+        "longDescription": "Runs the Amazon MCP server locally. Account operations require Amazon session cookies. Purchase checkout is a demonstration only.",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "Show my Amazon Lists",
+          "Find products on Amazon"
+        ]
+      }
+    }
+  }
+}

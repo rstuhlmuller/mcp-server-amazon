@@ -21,7 +21,7 @@ export async function getOrdersHistory() {
     const url = `https://www.${domain}/-/en/gp/css/order-history`
     console.error(`[INFO][get-orders-history] Fetching orders history from ${url}`)
 
-    const { browser, page } = await createBrowserAndPage()
+    const { browser, page } = await createBrowserAndPage(true)
 
     try {
       // Navigate to the page
