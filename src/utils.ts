@@ -25,9 +25,8 @@ export function loadAmazonCookiesFile() {
       throw new Error(`Error reading or parsing amazonCookies.json: ${error.message}`)
     }
   } else {
-    throw new Error(
-      `No amazonCookies.json file found at ${COOKIES_FILE_PATH}. Please create it by logging into Amazon and exporting your cookies.`
-    )
+    console.error('[WARN] No amazonCookies.json found. Account tools require an Amazon browser session.')
+    return []
   }
 }
 

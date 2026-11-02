@@ -80,3 +80,9 @@ See `~/Library/Logs/Claude/mcp-server-amazon.log`
 Use a `listId` from `amazon_list_lists`. These tools reuse the configured Amazon cookies and marketplace. Reading items loads up to 50 batches; `complete: false` means more items may exist. Failed access or an unverified addition returns an MCP error. Mock mode supports reading the synthetic List fixtures and disables additions.
 
 Run the offline List checks with `npm run test:lists`.
+
+### Local ChatGPT Work setup
+
+Register the built server with `codex mcp add amazon -- /absolute/path/to/node /absolute/path/to/mcp-server-amazon/build/index.js`, then restart the MCP server in the desktop app. The server starts and advertises its tools without `amazonCookies.json`; authenticated Amazon operations still need an Amazon browser session. Standard Login with Amazon OAuth profile scopes do not grant access to shopping Lists or the cart.
+
+Verify cookie-free startup with `npm run build && node --test tests/startup.test.mjs`.
