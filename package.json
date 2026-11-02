@@ -7,7 +7,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc && chmod -R 755 ./build",
-    "clean": "rm mocks/*_202*"
+    "clean": "rm mocks/*_202*",
+    "test:lists": "npm run build && node --experimental-test-module-mocks --test tests/lists.test.mjs"
   },
   "files": [
     "build"

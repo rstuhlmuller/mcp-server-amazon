@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { getOrdersHistory } from './orders.js'
 import { getCartContent, addToCart, clearCart, removeFromCart } from './cart.js'
 import { getProductDetails, searchProducts } from './products.js'
+import { listLists, listItems, addToList, listIdSchema, listAsinSchema } from './lists.js'
 
 // Create server instance
 const server = new McpServer({
@@ -305,6 +306,35 @@ server.tool(
     }
   }
 )
+
+server.tool('amazon_list_lists', 'Find your existing named Amazon Lists, including IDs for reading or adding products.', {}, async () => {
+  try {
+    return { content: [{ type: 'text', text: JSON.stringify(await listLists(), null, 2) }] }
+  } catch (error) {
+    return { isError: true, content: [{ type: 'text', text: String(error) }] }
+  }
+})
+
+server.tool('amazon_list_items', 'Read products in an Amazon List. If complete is false, only loaded products are returned.', {
+  listId: listIdSchema.describe('The List ID returned by amazon_list_lists.'),
+}, async ({ listId }) => {
+  try {
+    return { content: [{ type: 'text', text: JSON.stringify(await listItems(listId), null, 2) }] }
+  } catch (error) {
+    return { isError: true, content: [{ type: 'text', text: String(error) }] }
+  }
+})
+
+server.tool('amazon_add_to_list', 'Add a product by ASIN to the selected Amazon List.', {
+  listId: listIdSchema.describe('The selected List ID returned by amazon_list_lists.'),
+  asin: listAsinSchema.describe('The ASIN of the product to add.'),
+}, async ({ listId, asin }) => {
+  try {
+    return { content: [{ type: 'text', text: JSON.stringify(await addToList(listId, asin), null, 2) }] }
+  } catch (error) {
+    return { isError: true, content: [{ type: 'text', text: String(error) }] }
+  }
+})
 
 // Start the server
 async function main() {

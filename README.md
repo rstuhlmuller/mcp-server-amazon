@@ -68,3 +68,15 @@ See `~/Library/Logs/Claude/mcp-server-amazon.log`
 ## License
 
 [The MIT license](./LICENSE)
+
+## Amazon Lists
+
+| Tool | Arguments | Result |
+| --- | --- | --- |
+| `amazon_list_lists` | None | Named Lists with `listId`, `name`, and `url` |
+| `amazon_list_items` | `listId` | Products with ASIN, title, product URL, optional price/image, and `complete` |
+| `amazon_add_to_list` | `listId`, `asin` | Verified addition to the selected List |
+
+Use a `listId` from `amazon_list_lists`. These tools reuse the configured Amazon cookies and marketplace. Reading items loads up to 50 batches; `complete: false` means more items may exist. Failed access or an unverified addition returns an MCP error. Mock mode supports reading the synthetic List fixtures and disables additions.
+
+Run the offline List checks with `npm run test:lists`.
